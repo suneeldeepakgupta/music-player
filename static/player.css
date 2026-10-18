@@ -1,0 +1,477 @@
+body {
+    background-color: #363535;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+:root {
+    --cover-image: url("/thumbnail/qq3MZBB80-Q.webp");
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    scrollbar-width: none;
+}
+
+button {
+    background: none;
+    border: none;
+}
+video{
+    background-color: transparent;
+    object-fit: cover;
+    aspect-ratio: 1/1;
+    object-position: center center;
+    height:100vh;
+    width: 100vw;
+}
+#top {
+    max-width: 100%;
+}
+
+#song-title {
+    margin-top: 20px;
+    color: #e3e3e3;
+    font-size: 25px;
+    text-align: center;
+    margin: 10px;
+    overflow: scroll;
+    white-space: nowrap;
+    max-width: 90%;
+    overflow-x: auto;
+
+    scrollbar-width: none;
+}
+
+#artist {
+    color: #000000;
+    font-size: 17px;
+    text-align: center;
+    margin: 10px;
+    overflow: scroll;
+    white-space: nowrap;
+    max-width: 90%;
+    overflow-x: auto;
+    border-radius: 10px;
+    background-color: rgba(137, 138, 139, 0.322);
+    scrollbar-width: none;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 3px;
+}
+
+
+* -webkit-scrollbar {
+    display: none;
+}
+
+.player {
+    display: flex;
+    position: sticky;
+    bottom: 0;
+    width: min(100vh, 100vw);
+    height: 100vh;
+    max-width: 100vw;
+    flex-direction: column;
+    width: 100vw;
+    align-items: center;
+    transform-origin: top;
+    z-index: 1;
+}
+
+
+.player>#close {
+    position: absolute;
+    top: 20px;
+    right: 10px;
+}
+
+.player>#top {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.player>#artwork-lrc {
+    display: flex;
+    margin-top: 20px;
+    flex-direction: column;
+    align-items: center;
+    height: calc(100% - 40%);
+    justify-content: center;
+    width: 100%;
+    overflow: hidden;
+}
+
+.player>#artwork-lrc>#artwork {
+    margin: 13px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    z-index: 3;
+    transition-duration: 200ms;
+    transform-origin: top;
+}
+
+.player>#artwork-lrc>#lyrics-container {
+    position: relative;
+    flex-direction: column;
+    height: 100%;
+    align-items: center;
+    gap: 25px;
+    height: 100%;
+    width: 100%;
+    display: none;
+    overflow-y: scroll;
+    /* backdrop-filter: blur(10px); */
+    overflow-x: none;
+    scrollbar-width: none;
+
+}
+
+.player>#artwork-lrc>#lyrics-container::-webkit-scrollbar {
+    display: none;
+}
+
+.highlight {
+    color: rgb(207, 209, 208) !important;
+    font-weight: bold !important;
+    transition-duration: 200ms;
+    transition-timing-function: linear;
+}
+
+.lyric {
+    display: block;
+    font-size: 26px;
+    color: rgba(220, 225, 223, 0.336);
+}
+
+.player>#artwork-lrc>#artwork>img {
+    height: 100%;
+    max-width: 100%;
+    aspect-ratio: 1 / 1;
+    /* Forces the element to be a perfect square */
+    object-fit: cover;
+    /* Zooms in slightly to cut out the sidebars */
+    object-position: center;
+    border-radius: 20px;
+    /* Optional: adds rounded corners */
+    /* Ensures it crops left and right evenly */
+}
+
+.player>.bottom-container {
+    width: 100%;
+    position: absolute;
+    height: 20%;
+    bottom: 5vh;
+}
+
+#lyrics-toggle {
+    position: fixed;
+    z-index: 4;
+    top: 100px;
+    right: 30px;
+}
+
+.player>.bottom-container>#progress-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 5px;
+    height: auto;
+    /* Space above the progress bar */
+}
+
+
+
+.player>.bottom-container>#progress-container>#progress {
+    width: calc(100% - 15px);
+    height: 6px;
+    border-radius: 1.4px;
+    accent-color: #78787800;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+
+
+#time-container {
+    font-size: medium;
+    margin-top: 4px;
+    display: flex;
+}
+
+#current-time {
+    margin-left: 20px;
+    color: #e3e3e3;
+}
+
+#duration {
+    margin-left: auto;
+    margin-right: 20px;
+    color: #e3e3e3;
+}
+
+#bg-image {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(103, 105, 105, 0.11);
+    z-index: -2;
+    background-size: cover;
+    background-position: center center;
+    background-position-x: center;
+    background-repeat: no-repeat;
+    /* background-blend-mode: multiply; */
+}
+
+#overlay {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    display: none;
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    z-index: -1;
+}
+
+#controls {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.player>.bottom-container>#controls>button {
+    width: min(15%, 55px);
+    aspect-ratio: 1/1;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 50%;
+    background-color: rgba(116, 119, 119, 0.226);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.player>.bottom-container>#controls>button>svg {
+    height: 90%;
+    width: 90%;
+}
+
+#controls-2 {
+    margin: 10px;
+    width: 90%;
+    display: flex;
+    justify-content: flex-end;
+    box-sizing: border-box;
+}
+
+audio {
+    display: none;
+}
+
+.miniplayer {
+    display: flex;
+    gap: 14px;
+    position: fixed;
+    bottom: 50px;
+    left: 0;
+    width: calc(100% - 10px);
+    box-sizing: border-box;
+    margin-inline: 5px;
+    justify-self: center;
+    height: 80px;
+    border-radius: 3px;
+    overflow: hidden;
+    flex-direction: row;
+    transform-origin: bottom;
+}
+
+.miniplayer>#close {
+    display: none;
+}
+
+.miniplayer>#top {
+    max-width: 100%;   
+    order:1;
+    display: none;
+    margin-left: 30px;
+    align-self:flex-end;
+}
+
+.miniplayer>#top>#artist {
+   
+}
+.miniplayer>#top>#song-title {
+    font-size: 20px;
+    text-overflow: ellipsis;
+}
+.miniplayer>#artwork-lrc {
+    height: 100%;
+    display: flex;
+}
+
+.miniplayer>#artwork-lrc>#artwork {
+    height: 100%;
+    width: 100%;
+    display: flex !important;
+    transform: scale(1) !important;
+}
+
+.miniplayer>#artwork-lrc>#lyrics-container {
+    display: none !important;
+}
+
+.miniplayer>#artwork-lrc>#artwork>img {
+    height: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    object-position: center;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.miniplayer>.bottom-container {
+    height: 100%;
+    width: calc(100% - 80px);
+    max-width: 100vh;
+}
+
+
+.miniplayer>.bottom-container>#progress-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 3px;
+    width: calc(100%-120px);
+    /* Space above the progress bar */
+}
+
+
+.miniplayer>.bottom-container>#progress-container>#progress {
+    width: calc(100% - 15px);
+    height: 3px;
+    border-radius: 1.4px;
+    accent-color: #78787800;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    overflow: hidden;
+    margin: 4px;
+}
+
+/* This ONLY applies to devices with a mouse cursor */
+@media (hover: hover) {
+    .miniplayer>.bottom-container>#progress-container>#progress:hover {
+        overflow: visible;
+    }
+}
+
+.miniplayer>.bottom-container>#progress-container>#progress:active {
+   overflow: hidden;
+}
+.miniplayer>.bottom-container>#time-container {
+    width: 100%;
+}
+
+.miniplayer>.bottom-container>#controls {
+    margin-top: 4px;
+}
+
+.miniplayer>.bottom-container>#controls>button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1/1;
+    backdrop-filter: blur(10px);
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    -webkit-backdrop-filter: blur(10px);
+    background-color: rgba(116, 119, 119, 0.226);
+}
+
+.miniplayer>.bottom-container>#controls>button>svg {
+    width: 90%;
+    height: 90%;
+}
+
+.miniplayer>.bottom-container>#controls-2 {
+    display: none;
+}
+
+#player {
+    transition: all 0.2s ease-in-out;
+}
+
+
+.list>a>img {
+    /* Or set a specific size like 300px */
+    aspect-ratio: 1 / 1;
+    /* Forces the element to be a perfect square */
+    object-fit: cover;
+    /* Zooms in slightly to cut out the sidebars */
+    object-position: center;
+    border-radius: 20px;
+    /* Optional: adds rounded corners */
+    /* Ensures it crops left and right evenly */
+}
+
+.list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.list>a {
+    display: grid;
+    height: 170px;
+    width: 160px;
+    grid-template-rows: 1fr auto;
+    align-items: center;
+    text-decoration: none;
+    color: rgb(194, 193, 193);
+}
+
+.list>a>span {
+    text-align: center;
+    margin-top: 5px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+embed {
+    height: 100vh;
+    width: 100vw;
+    position: sticky;
+    top: 0;
+}
+
+.bar {
+    background-color: black;
+    width: 100%;
+    position: fixed;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    bottom: 0;
+    height: 50px;
+}
+
+
+.heart path {
+    cursor: pointer;
+    transition: fill 300ms ease, d 300ms ease;
+}
+
+.heart.active path {
+    fill: #e3e3e3;
+    stroke: #e3e3e3;
+    d: path("M479.43 -118 L416.43 -174.87 Q314.17 -265.56 247.76 -330.76 Q181.35 -395.96 143.56 -446.87 Q105.78 -497.78 91 -540.48 Q76.22 -583.17 76.22 -629 Q76.22 -726.48 142.59 -793.13 Q208.96 -859.78 306.43 -859.78 Q354.87 -859.78 400.3 -841.04 Q445.74 -822.31 479.43 -787.13 Q513.13 -822.31 558.57 -841.04 Q604 -859.78 652.43 -859.78 Q749.91 -859.78 816.85 -793.13 Q883.78 -726.48 883.78 -629 Q883.78 -583.74 869.78 -542.04 Q855.78 -500.35 817.72 -450.22 Q779.65 -400.09 712.46 -333.61 Q645.26 -267.13 540.44 -172.87 L479.43 -118 Z");
+}

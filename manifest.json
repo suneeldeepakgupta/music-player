@@ -1,0 +1,20 @@
+{
+  "name": "Music Player",
+  "short_name": "Player",
+  "description": "Offline-ready music player for your personal music library.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  
+  "background_color": "#171616",
+  "theme_color": "#171616",
+  "orientation": "auto",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

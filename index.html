@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#171616">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Music Player">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" type="image/svg+xml" href="/icon.svg">
+    <title>Document</title>
+</head>
+
+<body>
+    <input id="input" placeholder="enter url_" type="text">
+    <button id="submit">submit</button>
+    <script>
+        window.addEventListener("pageshow", (event) => {
+            const navType = performance.getEntriesByType("navigation")[0]?.type;
+            if (event.persisted || navType === "back_forward") {
+                window.location.reload();
+            }
+        });
+
+        document.getElementById("submit").addEventListener("click", async () => {
+            const url = document.getElementById("input").value;
+            document.getElementById("input").value = "";
+            try {
+                const response = await fetch("/download", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ url: url })
+                });
+
+                const data = await response.text();
+                console.log(data);
+                location.reload();
+
+            } catch (error) {
+                console.error("Download failed:", error);
+            }
+        });
+        let l = "/home";
+
+        fetch(l).then(response => response.json()).then(data => {
+            for (el of data) {
+                a = document.createElement("a");
+                span=document.createElement("span")
+                let i=document.createElement("img");
+                i.src=el["thumbnail"];
+                i.style.height="150px";
+                i.style.width="150px";
+                a.appendChild(i);
+                a.appendChild(span);
+                a.href=`/player?song=${el["id"]}`;
+                span.innerText=el["title"];
+                a.target = "_top";
+                document.body.appendChild(a);
+                
+            }
+        })
+    </script>
+    <style>
+        input {
+            width: 100px;
+            height: 20px;
+        }
+
+        button {
+            width: 100px;
+            height: 20px;
+        }
+
+        img {
+            /* Or set a specific size like 300px */
+            aspect-ratio: 1 / 1;
+            /* Forces the element to be a perfect square */
+            object-fit: cover;
+            /* Zooms in slightly to cut out the sidebars */
+            object-position: center;
+            border-radius: 20px;
+            /* Optional: adds rounded corners */
+            /* Ensures it crops left and right evenly */
+        }
+
+        * -webkit-scrollbar {
+            display: none;
+        }
+         *{
+            scrollbar-width: none;
+
+         }
+        body {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            background-color: transparent;
+        }
+
+        body>a {
+            display: grid;
+            height: 170px;
+            width: 160px;
+            grid-template-rows: 1fr auto;
+            align-items: center;
+            text-decoration: none;
+            color: rgb(194, 193, 193);
+        }
+
+        body>a>span {
+            text-align: center;
+            margin-top: 5px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    </style>
+</body>
+
+</html>
