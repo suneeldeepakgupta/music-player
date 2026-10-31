@@ -1,0 +1,49 @@
+a {
+    text-decoration: none;
+    font-size: 16px;
+}
+
+.track {
+    border-radius: 4px;
+    display: flex;
+    height: 60px;
+    width: 300px;
+    border: 0.5px solid rgba(56, 56, 56, 0.205);
+    margin: 8px;
+    background-color: rgba(50, 52, 53, 0.288);
+    gap: 10px;
+    overflow: hidden;
+}
+
+.track>div {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 40px
+}
+
+.track>div>*:nth-child(1) {
+    color: white;
+    font-size: 15px;
+    width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.track>div>*:nth-child(2) {
+    color: rgb(110, 106, 106);
+    font-size: 13px;
+    width: 220px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+img {
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 2px;
+}

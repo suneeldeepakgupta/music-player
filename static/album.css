@@ -1,0 +1,28 @@
+.album {
+    display: flex;
+    width: 120px;
+    background-color: rgba(93, 93, 94, 0.329);
+    border-radius: 5px;
+    height: 150px;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.album>div {
+    color: rgb(110, 106, 106);
+    font-size: 13px;
+    width: 100%;
+    white-space: nowrap;
+    height: 15px;
+    overflow: hidden;
+    margin-bottom: 2px;
+    text-align: center;
+    text-overflow: ellipsis;
+}
+
+img {
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 2px;
+}

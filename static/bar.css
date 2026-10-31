@@ -1,0 +1,17 @@
+.bar {
+    background-color: black;
+    width: 100%;
+    position: fixed;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-around;
+    bottom: 0;
+    height: 50px;
+}
+
+.bar>* {
+    background: none;
+    border: none;
+    height: 100%;
+    display: flex;
+}
