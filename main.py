@@ -5,54 +5,22 @@ import requests
 import sqlite3
 import traceback
 from urllib.parse import urlparse, parse_qs,urljoin
+from pathlib import Path
 
-def get_url_type(url):
-    parsed = urlparse(url)
-    host = (parsed.hostname or "").lower()
-    path = parsed.path.rstrip("/")
-    query = parse_qs(parsed.query)
-
-    if host not in {
-        "youtube.com",
-        "www.youtube.com",
-        "m.youtube.com",
-        "music.youtube.com",
-        "youtu.be",
-        "www.youtu.be",
-    }:
-        return "unknown"
-
-    if host.endswith("youtu.be"):
-        return "video" if path.strip("/") else "unknown"
-
-    if path == "/watch":
-        if query.get("v"):
-            return "video"
-        if query.get("list"):
-            return "playlist"
-        return "unknown"
-
-    if path.startswith(("/shorts/", "/live/", "/embed/")):
-        return "video" if len(path.split("/")) > 2 else "unknown"
-
-    if path.startswith(("/playlist",)):
-        return "playlist"
-
-    if path.startswith(("/@", "/channel/", "/c/", "/user/")):
-        return "channel"
-
-    return "unknown"
-
-
-
-import os
+PROJECT_DIR = Path(__file__).resolve().parent
+AUDIO_DIR = PROJECT_DIR / "audio"
+ALBUMS_DIR = PROJECT_DIR / "albums"
+VIDEOS_DIR = PROJECT_DIR / "videos"
+LYRICS_DIR = PROJECT_DIR / "lyrics"
+DATABASE_PATH = PROJECT_DIR / "data.db"
 
 def save_thumbnail(video_id, albumname):
-    os.makedirs("albums", exist_ok=True)
- #https://i.ytimg.com/vi_webp/w0pbdkrRRJM
-    url = f"https://i.ytimg.com/vi_webp/{video_id}/maxresdefault.webp"
-    path = f"albums/{albumname}.webp"
-
+    ALBUMS_DIR.mkdir(parents=True, exist_ok=True)
+ #https://i.ytimg.com/vi_webp/9MaV5vwzxTQ/hq720.webp
+    url = f"https://i.ytimg.com/vi_webp/{video_id}/hq720.webp"
+    path = ALBUMS_DIR / f"{albumname}.webp"
+    url2 = f"https://i.ytimg.com/vi_webp/{video_id}/sddefault.webp"
+    
     try:
         response = requests.get(url, timeout=15)
         response.raise_for_status()
@@ -62,25 +30,22 @@ def save_thumbnail(video_id, albumname):
 
         with open(path, "wb") as f:
             f.write(response.content)
-
-        return path
-
+        return str(path)
     except requests.RequestException as e:
         print(f"Thumbnail error: {e}")
         return None
 
-
 lrc_api="https://lrclib.net/api/search"
 def download_video(url, file_name):
+    VIDEOS_DIR.mkdir(parents=True, exist_ok=True)
     options1 = {
         "retries": 5,
         "fragment_retries": 5,
-        
         "sleep_interval": 2,
         "max_sleep_interval": 5,
         "extractor_retries": 3,
-        "format": "bestvideo[height<=720][ext=webm]+bestaudio[ext=webm]/best[height<=480][ext=webm]",
-        "outtmpl": f"videos/{file_name}.webm",
+        "format": "bestvideo[height<=1920][ext=webm]+bestaudio[ext=webm]/best[height<=480][ext=webm]",
+        "outtmpl": str(VIDEOS_DIR / f"{file_name}.webm"),
         "merge_output_format": "webm",
         "quiet": True,
         "ratelimit": 2000 * 1024,
@@ -126,7 +91,7 @@ def search_video(query, file_name):
         download_video(url, file_name)
         return 0
 def init_db():
-    conn=sqlite3.connect("data.db")
+    conn=sqlite3.connect(DATABASE_PATH)
     cursor=sqlite3.Cursor(conn)
 
     cursor.execute("""  
@@ -156,8 +121,8 @@ def init_db():
 init_db()
 options = {
     "outtmpl": {
-        "default": "audio/%(id)s.%(ext)s",
-        "thumbnail": "albums/%(album)s.%(ext)s",
+        "default": str(AUDIO_DIR / "%(id)s.%(ext)s"),
+        "thumbnail": str(ALBUMS_DIR / "%(album)s.%(ext)s"),
     },
     "overwrites": False,
     "format": "ba[acodec=opus]/ba",
@@ -181,7 +146,6 @@ def get_dev(a,b):
         return b-a
 
 def write_save_lrc(I,p,duration):
-    
     response = requests.get(lrc_api, params=p)
     print("--------------",response.status_code)
     if response.status_code == 429 or response.status_code == 503:
@@ -220,25 +184,27 @@ def write_save_lrc(I,p,duration):
             "\n"
         )
         synced = o.get("syncedLyrics")
-
         if synced and d < dev:
             dev = d
             lrc = synced
 
 
-    with open(f"lyrics/{I}.lrc", "w", encoding="utf-8") as f:
+    LYRICS_DIR.mkdir(parents=True, exist_ok=True)
+    with open(LYRICS_DIR / f"{I}.lrc", "w", encoding="utf-8") as f:
         f.write(lrc)
         return 0
         print("duration:", duration, "dev:", dev)
 
 
 def after_download(info):
-    conn=sqlite3.connect("data.db")
+    conn=sqlite3.connect(DATABASE_PATH)
     cursor=sqlite3.Cursor(conn)
+    print(info.keys())
     print("\n"*4)
     print("Title:", info.get("title"))
     print("ID:", info.get("id"))
     print("Duration:", info.get("duration"))
+    print("Artist" ,info.get("artist"))
     p = {  
         "track_name": info.get("title"),  
         "artist_name": info.get("artists")[0]  
@@ -247,12 +213,12 @@ def after_download(info):
     album=info.get("album")
     duration=info.get("duration")
     I=info.get("id")
-    save_thumbnail(id,album)
+    save_thumbnail(I,album)
     cursor.execute("""  
         INSERT INTO music (audio_id, title,duration, album, artists)   
          VALUES (?, ?, ?, ?,?)  
     """, (I, title,duration, album, info["artist"]))  
-
+    
     for artist in info["artists"]:  
         cursor.execute("""  
             INSERT INTO artists(artist,audio_id)  
@@ -307,14 +273,11 @@ def get_video_urls(url: str) -> list[str]:
 
         if not info:
             return []
-        with open("data.json", "w", encoding="utf-8") as f:
+        with open(PROJECT_DIR / "data.json", "w", encoding="utf-8") as f:
             json.dump(info, f, indent=4, ensure_ascii=False)
         return [info["webpage_url"]]
 def add_path(url, path):
     return urljoin(url.rstrip("/") + "/", path.lstrip("/"))
 
 def download_file(url):
-    t=get_url_type(url)
-    if t=="channel":
-        url=url+"/releases"
     download_song(url)   
