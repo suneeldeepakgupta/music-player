@@ -5,13 +5,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#171616">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Music Player">
     <link rel="manifest" href="/manifest.json">
     <link rel="icon" type="image/svg+xml" href="/icon.svg">
     <title>music player</title>
-
 </head>
 
 <body>
@@ -22,11 +22,12 @@
         }
 
         .loading {
-            position: fixed;
+            position: sticky;
             width: 100vw;
             height: 100vh;
             background-color: #333333f1;
             z-index: 7;
+            top: 0;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -55,10 +56,22 @@
     <div class="loading">
         <div class="load"></div>
     </div>
-    <embed id="emm">
+    <iframe id="emm"></iframe>
+    <script>
+        const frame = document.getElementById("emm");
+
+        window.addEventListener("message", (event) => {
+            if (event.origin !== location.origin) return;
+
+            if (event.data.type === "navigate") {
+                frame.src = event.data.url;
+            }
+        });
+    </script>
+
     <div class="miniplayer" id="player">
         <div id="bg-image">
-            <video id="video" muted autoplay></video>
+            <video id="video" class="hidden" muted autoplay></video>
         </div>
         <div id="overlay"></div>
         <script>
@@ -78,6 +91,7 @@
             <div id="song-title">Song Title</div>
             <div id="artist">Song Artist</div>
         </div>
+
         <div id="artwork-lrc">
             <div id="artwork">
                 <img id="artwork-img" src="" alt="Artwork">
@@ -87,20 +101,46 @@
             </div>
         </div>
         <div class="bottom-container">
+
             <div id="controls-2">
+                <button id="video-toggle">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                        fill="#e3e3e3">
+                        <path
+                            d="M491-309q29-29 29-71v-220h120v-80H480v220q-13-9-28-14.5t-32-5.5q-42 0-71 29t-29 71q0 42 29 71t71 29q42 0 71-29ZM160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm0-80h640v-480H160v480Zm0 0v-480 480Z" />
+                    </svg>
+                    <div>
+                        Video
+                    </div>
+                </button>
+                <button id="toggle-queue">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"
+                        fill="#e3e3e3">
+                        <path
+                            d="M641.96-160q-48.63 0-82.63-34.04-34-34.04-34-82.67 0-48.62 33.45-82.62 33.44-34 81.22-34 14.31 0 27.32 2.5T692-382v-338h188v74H758.67v370q0 48.33-34.04 82.17Q690.59-160 641.96-160ZM120-320v-66.67h310.67V-320H120Zm0-166.67v-66.66h475.33v66.66H120Zm0-166.66V-720h475.33v66.67H120Z" />
+                    </svg>
+                    <div>Queue</div>
+                </button>
                 <button id="lyrics-toggle">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px"
+                    <svg xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960" width="20px"
                         fill="#e3e3e3">
                         <path
                             d="M80-80v-720q0-33 23.5-56.5T160-880h440q33 0 56.5 23.5T680-800v17q-24 11-44 27t-36 36v-80H160v527l47-47h393v-160q16 20 36 36t44 27v97q0 33-23.5 56.5T600-240H240L80-80Zm160-320h160v-80H240v80Zm520-80q-50 0-85-35t-35-85q0-50 35-85t85-35q11 0 21 2t19 5v-207h160v80h-80v240q0 50-35 85t-85 35Zm-520-40h280v-80H240v80Zm0-120h280v-80H240v80Zm-80 320v-480 480Z" />
                     </svg>
+                    <div>
+                        Lyrics
+                    </div>
                 </button>
+
                 <button id="like">
-                    <svg class="heart" xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960"
-                        width="40px" fill="#e3e3e3">
+                    <svg class="heart" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 -960 960 960"
+                        width="20px" fill="#e3e3e3">
                         <path
                             d="m480-120.67-46.67-42q-104.18-95.08-172.25-164.04Q193-395.67 152.67-450.17q-40.34-54.5-56.5-99.16Q80-594 80-640q0-91.44 61.33-152.72 61.34-61.28 152-61.28 55.34 0 103.34 25.33 48 25.34 83.33 72.67 39.33-49.33 86.33-73.67 47-24.33 100.34-24.33 90.66 0 152 61.28Q880-731.44 880-640q0 46-16.17 90.67-16.16 44.66-56.5 99.16-40.33 54.5-108.41 123.46-68.07 68.96-172.25 164.04l-46.67 42Zm0-88.66q99.49-90.67 163.75-155.5Q708-429.67 745.67-478.17q37.66-48.5 52.66-86.42t15-75.31q0-64.1-41.33-105.77-41.33-41.66-105.18-41.66-50.02 0-92.59 29.83-42.56 29.83-65.56 81.5h-58q-22.34-51-64.9-81.17-42.57-30.16-92.59-30.16-63.85 0-105.18 41.66-41.33 41.67-41.33 105.88 0 37.46 15 75.62 15 38.17 52.66 87Q252-428.33 316.67-363.83q64.66 64.5 163.33 154.5Zm0-289Z" />
                     </svg>
+                    <div>
+                        Like
+                    </div>
                 </button>
             </div>
             <div id="progress-container">
@@ -112,12 +152,8 @@
                 <span id="duration">0:00</span>
             </div>
             <div id="controls">
-                <button style="display:none" id="seek-backward">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px"
-                        fill="#e3e3e3">
-                        <path
-                            d="M854-240 508-480l346-240v480Zm-402 0L106-480l346-240v480Zm-60-240Zm402 0ZM392-355v-250L211-480l181 125Zm402 0v-250L613-480l181 125Z" />
-                    </svg>
+                <button id="loop-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" height="48px" width="48px" fill="#e3e3e3"><path d="M9.8,31.45q-1-1.8-1.4-3.63T8,24.1q0-6.55 4.73-11.28T24,8.1h2.15l-4-4L24.1,2.15L31.55,9.6L24.1,17.05l-2-2l3.95-3.95H24q-5.35,0-9.17,3.82T11,24.1q0,1.45 0.28,2.75t0.68,2.45L9.8,31.45ZM23.8,46l-7.45-7.45L23.8,31.1l1.95,1.95l-4,4H24q5.35,0 9.18-3.82T37,24.05q0-1.45-0.25-2.75T36,18.85l2.15-2.15q1,1.8 1.43,3.63T40,24.05q0,6.55-4.73,11.28T24,40.05H21.75l4,4L23.8,46Z"/></svg>
                 </button>
                 <button id="prev">
                     <svg xmlns="http://www.w3.org/2000/svg" height="53px" viewBox="0 -960 960 960" width="53px"
@@ -140,12 +176,8 @@
                             d="M660-240v-480h80v480h-80Zm-440 0v-480l360 240-360 240Zm80-240Zm0 90 136-90-136-90v180Z" />
                     </svg>
                 </button>
-                <button style="display:none" id="seek-forward">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px"
-                        fill="#e3e3e3">
-                        <path
-                            d="M104-240v-480l346 240-346 240Zm407 0v-480l346 240-346 240ZM164-480Zm407 0ZM164-355l181-125-181-125v250Zm407 0 181-125-181-125v250Z" />
-                    </svg>
+                <button  id="seek-forward">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" height="48px" width="48px" fill="#e3e3e3"><path d="M28.8,40V37h6l-8.7-8.65l2.1-2.15L37,34.9V28.85h3V40H28.8ZM10.1,40L8,37.85L34.9,11H28.8V8H40V19.15H37v-6L10.1,40Zm9.65-18.15L8,10.15L10.15,8L21.9,19.7l-2.15,2.15Z"/></svg>
                 </button>
 
             </div>
@@ -154,34 +186,17 @@
 
         <audio id="audio" autoplay></audio>
     </div>
-    <div class="bar">
-        <button id="home">
+    <div class="queue">
+        <button>
             <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="#e3e3e3">
                 <path
-                    d="M226.67-186.67h140v-246.66h226.66v246.66h140v-380L480-756.67l-253.33 190v380ZM160-120v-480l320-240 320 240v480H526.67v-246.67h-93.34V-120H160Zm320-352Z" />
-            </svg>
-        </button>
-        <button id="albums">
-            <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="#e3e3e3">
-                <path
-                    d="M480-310.67q71.67 0 122.5-49.16Q653.33-409 653.33-480q0-72.33-50.5-122.83T480-653.33q-71 0-120.17 50.83-49.16 50.83-49.16 122.5 0 71 49.16 120.17Q409-310.67 480-310.67ZM451.5-451.5Q440-463 440-480t11.5-28.5Q463-520 480-520t28.5 11.5Q520-497 520-480t-11.5 28.5Q497-440 480-440t-28.5-11.5ZM480-80q-82.33 0-155.33-31.5-73-31.5-127.34-85.83Q143-251.67 111.5-324.67T80-480q0-83 31.5-156t85.83-127q54.34-54 127.34-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 82.33-31.5 155.33-31.5 73-85.5 127.34Q709-143 636-111.5T480-80Zm0-66.67q139.33 0 236.33-97.33t97-236q0-139.33-97-236.33t-236.33-97q-138.67 0-236 97-97.33 97-97.33 236.33 0 138.67 97.33 236 97.33 97.33 236 97.33ZM480-480Z" />
-            </svg>
-        </button>
-        <button id="artists">
-            <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="#e3e3e3">
-                <path
-                    d="M745.33-560H880v66.67h-82v230Q798-218 769-189t-74.33 29q-45.34 0-74.34-29t-29-74.33q0-45.34 29-74.34t74.34-29q14 0 26.66 3.17 12.67 3.17 24 10.17V-560Zm-652 400v-100q0-33 17.17-62t49.5-44q70.67-32.33 131-46.5 60.33-14.17 122.33-14.17 45.34 0 88.17 7.17t88.17 22.83q-14.67 11.34-26 24.67-11.34 13.33-20 29.33-30-8.66-62.5-13-32.5-4.33-67.84-4.33-57.66 0-110 12Q251-336 188-306q-13.67 7-20.83 19.67Q160-273.67 160-260v33.33h367q3.33 19.34 10.83 36Q545.33-174 557-160H93.33Zm210.34-364.33Q260-568 260-634t43.67-109.67q43.66-43.66 109.66-43.66T523-743.67Q566.67-700 566.67-634T523-524.33q-43.67 43.66-109.67 43.66t-109.66-43.66Zm171.5-47.84Q500-597 500-634t-24.83-61.83q-24.84-24.84-61.84-24.84t-61.83 24.84Q326.67-671 326.67-634t24.83 61.83q24.83 24.84 61.83 24.84t61.84-24.84ZM413.33-634Zm0 407.33Z" />
-            </svg>
-        </button>
-        <button id="tracks">
-            <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="#e3e3e3">
-                <path
-                    d="M641.96-160q-48.63 0-82.63-34.04-34-34.04-34-82.67 0-48.62 33.45-82.62 33.44-34 81.22-34 14.31 0 27.32 2.5T692-382v-338h188v74H758.67v370q0 48.33-34.04 82.17Q690.59-160 641.96-160ZM120-320v-66.67h310.67V-320H120Zm0-166.67v-66.66h475.33v66.66H120Zm0-166.66V-720h475.33v66.67H120Z" />
+                    d="m251.33-204.67-46.66-46.66L433.33-480 204.67-708.67l46.66-46.66L480-526.67l228.67-228.66 46.66 46.66L526.67-480l228.66 228.67-46.66 46.66L480-433.33 251.33-204.67Z" />
             </svg>
         </button>
     </div>
-
     <link rel="stylesheet" href="/static/player.css">
+
+
     <script src="/static/script.js"></script>
 </body>
 
