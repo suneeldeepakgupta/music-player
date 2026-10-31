@@ -5,9 +5,9 @@ body {
     width: 100%;
     height: 100%;
 }
-
-:root {
-    --cover-image: url("/thumbnail/qq3MZBB80-Q.webp");
+body {
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 * {
@@ -20,20 +20,27 @@ button {
     background: none;
     border: none;
 }
-video{
+
+video {
     background-color: transparent;
     object-fit: cover;
     aspect-ratio: 1/1;
+    position: absolute;
     object-position: center center;
-    height:100vh;
+    height: 100vh;
     width: 100vw;
+    z-index: -1;
 }
+
+.hidden {
+    display: none;
+}
+
 #top {
     max-width: 100%;
 }
 
 #song-title {
-    margin-top: 20px;
     color: #e3e3e3;
     font-size: 25px;
     text-align: center;
@@ -42,25 +49,25 @@ video{
     white-space: nowrap;
     max-width: 90%;
     overflow-x: auto;
-
+    backdrop-filter: blur(2px);
     scrollbar-width: none;
 }
 
 #artist {
-    color: #000000;
-    font-size: 17px;
+    color: #cccccc;
+    font-size: 16px;
     text-align: center;
-    margin: 10px;
     overflow: scroll;
     white-space: nowrap;
-    max-width: 90%;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    max-width: 80%;
     overflow-x: auto;
     border-radius: 10px;
     background-color: rgba(137, 138, 139, 0.322);
     scrollbar-width: none;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    padding: 3px;
+    padding-inline: 3px;
 }
 
 
@@ -71,7 +78,8 @@ video{
 .player {
     display: flex;
     position: sticky;
-    bottom: 0;
+    top: 0;
+    transition: all;
     width: min(100vh, 100vw);
     height: 100vh;
     max-width: 100vw;
@@ -90,6 +98,7 @@ video{
 }
 
 .player>#top {
+    top: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -100,7 +109,7 @@ video{
     margin-top: 20px;
     flex-direction: column;
     align-items: center;
-    height: calc(100% - 40%);
+    height: calc(100% - 20% - 10vh);
     justify-content: center;
     width: 100%;
     overflow: hidden;
@@ -139,15 +148,16 @@ video{
 }
 
 .highlight {
-    color: rgb(207, 209, 208) !important;
+    color: rgb(182, 182, 190) !important;
     font-weight: bold !important;
-    transition-duration: 200ms;
+    transition-duration: 500ms;
     transition-timing-function: linear;
+    font-size: 25px !important;
 }
 
 .lyric {
     display: block;
-    font-size: 26px;
+    font-size: 23px;
     color: rgba(220, 225, 223, 0.336);
 }
 
@@ -166,12 +176,12 @@ video{
 
 .player>.bottom-container {
     width: 100%;
-    position: absolute;
-    height: 20%;
-    bottom: 5vh;
+    position: static;
+    height: min(20%, 150px);
+    margin-top:auto;
+    padding-bottom:15px;
 }
-
-#lyrics-toggle {
+#lyrics-gtoggle {
     position: fixed;
     z-index: 4;
     top: 100px;
@@ -191,9 +201,11 @@ video{
 
 .player>.bottom-container>#progress-container>#progress {
     width: calc(100% - 15px);
-    height: 6px;
+    height: 10px;
     border-radius: 1.4px;
-    accent-color: #78787800;
+    transition: all;
+    transition-duration: 100ms;
+    accent-color: #85848456;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
 }
@@ -247,7 +259,7 @@ video{
 }
 
 .player>.bottom-container>#controls>button {
-    width: min(15%, 55px);
+    width: min(15%, 50px);
     aspect-ratio: 1/1;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -267,8 +279,27 @@ video{
     margin: 10px;
     width: 90%;
     display: flex;
+    gap: 8px;
     justify-content: flex-end;
     box-sizing: border-box;
+}
+
+#controls-2>button {
+    display: flex;
+    align-items: center;
+    color: white;
+    font-size: 16px;
+    height: 30px;
+    padding: 5px;
+    backdrop-filter: blur(10px);
+    border-radius: 50cqh;
+    gap: 5px;
+    background-color: rgba(116, 119, 119, 0.226);
+}
+
+#controls-2>button>svg {
+    height: 100%;
+    aspect-ratio: 1/1;
 }
 
 audio {
@@ -281,9 +312,9 @@ audio {
     position: fixed;
     bottom: 50px;
     left: 0;
-    width: calc(100% - 10px);
+    width: calc(100% - 1px);
     box-sizing: border-box;
-    margin-inline: 5px;
+    margin-inline: 1px;
     justify-self: center;
     height: 80px;
     border-radius: 3px;
@@ -297,20 +328,20 @@ audio {
 }
 
 .miniplayer>#top {
-    max-width: 100%;   
-    order:1;
+    max-width: 100%;
+    order: 1;
     display: none;
     margin-left: 30px;
-    align-self:flex-end;
+    align-self: flex-end;
 }
 
-.miniplayer>#top>#artist {
-   
-}
+.miniplayer>#top>#artist {}
+
 .miniplayer>#top>#song-title {
     font-size: 20px;
     text-overflow: ellipsis;
 }
+
 .miniplayer>#artwork-lrc {
     height: 100%;
     display: flex;
@@ -372,8 +403,9 @@ audio {
 }
 
 .miniplayer>.bottom-container>#progress-container>#progress:active {
-   overflow: hidden;
+    overflow: hidden;
 }
+
 .miniplayer>.bottom-container>#time-container {
     width: 100%;
 }
@@ -446,11 +478,17 @@ audio {
     white-space: nowrap;
 }
 
-embed {
-    height: 100vh;
+iframe {
+    height: 100%;
     width: 100vw;
-    position: sticky;
-    top: 0;
+    position: fixed;
+    bottom: 0;
+
+    border: none;
+    transition: background;
+
+    transition-duration: 3s;
+    transition-timing-function: linear;
 }
 
 .bar {
@@ -474,4 +512,152 @@ embed {
     fill: #e3e3e3;
     stroke: #e3e3e3;
     d: path("M479.43 -118 L416.43 -174.87 Q314.17 -265.56 247.76 -330.76 Q181.35 -395.96 143.56 -446.87 Q105.78 -497.78 91 -540.48 Q76.22 -583.17 76.22 -629 Q76.22 -726.48 142.59 -793.13 Q208.96 -859.78 306.43 -859.78 Q354.87 -859.78 400.3 -841.04 Q445.74 -822.31 479.43 -787.13 Q513.13 -822.31 558.57 -841.04 Q604 -859.78 652.43 -859.78 Q749.91 -859.78 816.85 -793.13 Q883.78 -726.48 883.78 -629 Q883.78 -583.74 869.78 -542.04 Q855.78 -500.35 817.72 -450.22 Q779.65 -400.09 712.46 -333.61 Q645.26 -267.13 540.44 -172.87 L479.43 -118 Z");
+}
+
+
+.queue {
+    position: fixed;
+    background-color: rgba(54, 54, 54, 0.295);
+    overflow-y: scroll;
+    z-index: 8;
+    backdrop-filter: blur(30px);
+    transition-duration: 500ms;
+    display:none;
+    transform: translateY(0);
+    flex-direction: column;
+    overflow-y: auto;
+    height: 80vh;
+    width: min(100vw,60vh);
+    overflow-x: hidden;
+    border-radius: 10px;
+    transition-duration: 0.5s;
+    border: 1px solid rgb(26, 25, 25);
+}
+
+
+.queuetranslate{
+    display: flex !important;
+    transform: translateY(-80vh);
+}
+
+
+.track {
+    border-radius: 4px;
+    display: flex;
+    height: 60px;
+    width: min(400px,80%);
+    border: 0.5px solid rgba(56, 56, 56, 0.205);
+    margin: 8px;
+    background-color: rgba(50, 52, 53, 0.288);
+    gap: 10px;
+    flex-shrink:0;
+    overflow: hidden;
+}
+
+.track {
+    text-decoration: none;
+    font-size: 16px;
+    margin-left: 15px;
+}
+.track:last-child{
+    margin-bottom: 10vh;
+}
+
+.track>div {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 40px
+}
+
+.track>div>*:nth-child(1) {
+    color: white;
+    font-size: 15px;
+    width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.track>div>*:nth-child(2) {
+    color: rgb(110, 106, 106);
+    font-size: 13px;
+    width: 220px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+}
+
+.track>img {
+    /* Or set a specific size like 300px */
+    aspect-ratio: 1 / 1;
+    /* Forces the element to be a perfect square */
+    object-fit: cover;
+    /* Zooms in slightly to cut out the sidebars */
+    object-position: center;
+    border-radius: 2px;
+    /* Optional: adds rounded corners */
+    /* Ensures it crops left and right evenly */
+}
+.queue>:nth-child(1){
+    position: relative;
+    left:calc(100vw - 40px);
+    
+}
+
+.playing {
+    transition: all;
+    transition-duration: 2s;
+    border-radius:30px;
+    border: 2px solid rgba(97, 34, 173, 0.651);
+}
+
+.playing > img {
+    transition: all;
+    transition-duration: 2s;
+    animation: a 6s linear infinite;
+    border-radius: 50%;
+    
+}
+.playing > button{
+    display: none;
+}
+
+@keyframes a {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+.paused >img {
+    animation: none  !important;
+}
+
+
+
+
+.track {
+  cursor: grab;
+  user-select: none;
+}
+.track > button{
+
+    margin-left: auto;
+    margin-right: 10px;
+}
+.track:active {
+  cursor: grabbing;
+}
+
+.track.dragging {
+  opacity: 0.4;
+}
+
+.enabled{
+    background-color: rgba(168, 168, 168, 0.564) !important;
+    
 }
