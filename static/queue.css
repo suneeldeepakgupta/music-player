@@ -1,0 +1,149 @@
+.queue {
+    position: fixed;
+    background-color: rgba(54, 54, 54, 0.295);
+    overflow-y: scroll;
+    z-index: 8;
+    backdrop-filter: blur(30px);
+    transition-duration: 500ms;
+    display: none;
+    transform: translateY(0);
+    flex-direction: column;
+    overflow-y: auto;
+    height: 80vh;
+    width: min(100vw, 60vh);
+    overflow-x: hidden;
+    border-radius: 10px;
+    transition-duration: 0.5s;
+    border: 1px solid rgb(26, 25, 25);
+}
+
+
+.queuetranslate {
+    display: flex !important;
+    transform: translateY(-80vh);
+}
+
+
+.track {
+    border-radius: 4px;
+    display: flex;
+    height: 60px;
+    width: min(400px, 80%);
+    border: 0.5px solid rgba(56, 56, 56, 0.205);
+    margin: 8px;
+    background-color: rgba(50, 52, 53, 0.288);
+    gap: 10px;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.track {
+    text-decoration: none;
+    font-size: 16px;
+    margin-left: 15px;
+}
+
+.track:last-child {
+    margin-bottom: 10vh;
+}
+
+.track>div {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 40px
+}
+
+.track>div>*:nth-child(1) {
+    color: white;
+    font-size: 15px;
+    width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.track>div>*:nth-child(2) {
+    color: rgb(110, 106, 106);
+    font-size: 13px;
+    width: 220px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+}
+
+.track>img {
+    /* Or set a specific size like 300px */
+    aspect-ratio: 1 / 1;
+    /* Forces the element to be a perfect square */
+    object-fit: cover;
+    /* Zooms in slightly to cut out the sidebars */
+    object-position: center;
+    border-radius: 2px;
+    /* Optional: adds rounded corners */
+    /* Ensures it crops left and right evenly */
+}
+
+.queue>:nth-child(1) {
+    position: relative;
+    left: calc(100vw - 40px);
+
+}
+
+.playing {
+    transition: all;
+    transition-duration: 2s;
+    border-radius: 30px;
+    border: 2px solid rgba(97, 34, 173, 0.651);
+}
+
+.playing>img {
+    transition: all;
+    transition-duration: 2s;
+    animation: a 6s linear infinite;
+    border-radius: 50%;
+
+}
+
+.playing>button {
+    display: none;
+}
+
+@keyframes a {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.paused>img {
+    animation: none !important;
+}
+
+
+
+
+.track {
+    cursor: grab;
+    user-select: none;
+}
+
+.track>button {
+
+    margin-left: auto;
+    margin-right: 10px;
+}
+
+.track:active {
+    cursor: grabbing;
+}
+
+.track.dragging {
+    opacity: 0.4;
+}
+
