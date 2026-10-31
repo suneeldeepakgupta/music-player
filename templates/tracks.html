@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Tracks</title>
+    <link rel="stylesheet" href="/static/track.css">
+    <link rel="stylesheet" href="/static/bar.css">
+    <link rel="stylesheet" href="/static/contextmenu.css">
+    <script src="/static/cards.js"></script>
+</head>
+
+<body>
+
+    <div id="context-menu">
+        <ul>
+            <li>
+                <button onclick="this.m.click()">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                        fill="#e3e3e3">
+                        <path
+                            d="m383-310 267-170-267-170v340Zm97 230q-82 0-155-31.5t-127.5-86Q143-252 111.5-325T80-480q0-83 31.5-156t86-127Q252-817 325-848.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 82-31.5 155T763-197.5q-54 54.5-127 86T480-80Zm0-60q142 0 241-99.5T820-480q0-142-99-241t-241-99q-141 0-240.5 99T140-480q0 141 99.5 240.5T480-140Zm0-340Z" />
+                    </svg>
+                    <div>Play</div>
+                </button>
+            </li>
+            <li>
+                <button onclick="this.m.queue()"><svg xmlns="http://www.w3.org/2000/svg" height="24px"
+                        viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
+                        <path
+                            d="M440-360h80v-120h120v-80H520v-120h-80v120H320v80h120v120ZM320-120v-80H160q-33 0-56.5-23.5T80-280v-480q0-33 23.5-56.5T160-840h640q33 0 56.5 23.5T880-760v480q0 33-23.5 56.5T800-200H640v80H320ZM160-280h640v-480H160v480Zm0 0v-480 480Z" />
+                    </svg>
+                    <div>Add To Queue</div>
+                </button>
+            </li>
+            <li>
+                <button onclick="this.m.play_next()"><svg xmlns="http://www.w3.org/2000/svg" height="24px"
+                        viewBox="0 -960 960 960" width="24px" fill="#e3e3e3">
+                        <path
+                            d="m780-60-60-60 120-120-120-120 60-60 180 180L780-60Zm-460-60v-80H160q-33 0-56.5-23.5T80-280v-480q0-33 23.5-56.5T160-840h640q33 0 56.5 23.5T880-760v280h-80v-280H160v480h520v80h-80v80H320Zm120-240h80v-120h120v-80H520v-120h-80v120H320v80h120v120Zm-280 80v-480 480Z" />
+                    </svg>
+                    <div>play next</div>
+                </button>
+            </li>
+            <li>
+                <button>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                        fill="#e3e3e3">
+                        <path
+                            d="M480-300q75 0 127.5-52.5T660-480q0-75-52.5-127.5T480-660q-75 0-127.5 52.5T300-480q0 75 52.5 127.5T480-300Zm-28.5-151.5Q440-463 440-480t11.5-28.5Q463-520 480-520t28.5 11.5Q520-497 520-480t-11.5 28.5Q497-440 480-440t-28.5-11.5ZM480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" />
+                    </svg>
+                    <div>Go to album</div>
+                </button>
+            </li>
+            <li>
+                <button>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px"
+                        fill="#e3e3e3">
+                        <path
+                            d="M740-560h140v80h-80v220q0 42-29 71t-71 29q-42 0-71-29t-29-71q0-42 29-71t71-29q8 0 18 1.5t22 6.5v-208ZM120-160v-112q0-35 17.5-63t46.5-43q62-31 126-46.5T440-440q42 0 83.5 6.5T607-414q-20 12-36 29t-28 37q-26-6-51.5-9t-51.5-3q-57 0-112 14t-108 40q-9 5-14.5 14t-5.5 20v32h321q2 20 9.5 40t20.5 40H120Zm207-367q-47-47-47-113t47-113q47-47 113-47t113 47q47 47 47 113t-47 113q-47 47-113 47t-113-47Zm169.5-56.5Q520-607 520-640t-23.5-56.5Q473-720 440-720t-56.5 23.5Q360-673 360-640t23.5 56.5Q407-560 440-560t56.5-23.5ZM440-640Zm0 400Z" />
+                    </svg>
+                    <div>Go to Artists</div>
+                </button>
+            </li>
+        </ul>
+    </div>
+    <div class="tracks">
+    </div>
+    <div class="bar">
+        <a id="home" href="/">
+            <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="#e3e3e3">
+                <path
+                    d="M226.67-186.67h140v-246.66h226.66v246.66h140v-380L480-756.67l-253.33 190v380ZM160-120v-480l320-240 320 240v480H526.67v-246.67h-93.34V-120H160Zm320-352Z" />
+            </svg>
+        </a>
+        <a id="albums" href="/album">
+            <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="#e3e3e3">
+                <path
+                    d="M480-310.67q71.67 0 122.5-49.16Q653.33-409 653.33-480q0-72.33-50.5-122.83T480-653.33q-71 0-120.17 50.83-49.16 50.83-49.16 122.5 0 71 49.16 120.17Q409-310.67 480-310.67ZM451.5-451.5Q440-463 440-480t11.5-28.5Q463-520 480-520t28.5 11.5Q520-497 520-480t-11.5 28.5Q497-440 480-440t-28.5-11.5ZM480-80q-82.33 0-155.33-31.5-73-31.5-127.34-85.83Q143-251.67 111.5-324.67T80-480q0-83 31.5-156t85.83-127q54.34-54 127.34-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 82.33-31.5 155.33-31.5 73-85.5 127.34Q709-143 636-111.5T480-80Zm0-66.67q139.33 0 236.33-97.33t97-236q0-139.33-97-236.33t-236.33-97q-138.67 0-236 97-97.33 97-97.33 236.33 0 138.67 97.33 236 97.33 97.33 236 97.33ZM480-480Z" />
+            </svg>
+        </a>
+        <a id="artists" href="/artists">
+            <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="#e3e3e3">
+                <path
+                    d="M745.33-560H880v66.67h-82v230Q798-218 769-189t-74.33 29q-45.34 0-74.34-29t-29-74.33q0-45.34 29-74.34t74.34-29q14 0 26.66 3.17 12.67 3.17 24 10.17V-560Zm-652 400v-100q0-33 17.17-62t49.5-44q70.67-32.33 131-46.5 60.33-14.17 122.33-14.17 45.34 0 88.17 7.17t88.17 22.83q-14.67 11.34-26 24.67-11.34 13.33-20 29.33-30-8.66-62.5-13-32.5-4.33-67.84-4.33-57.66 0-110 12Q251-336 188-306q-13.67 7-20.83 19.67Q160-273.67 160-260v33.33h367q3.33 19.34 10.83 36Q545.33-174 557-160H93.33Zm210.34-364.33Q260-568 260-634t43.67-109.67q43.66-43.66 109.66-43.66T523-743.67Q566.67-700 566.67-634T523-524.33q-43.67 43.66-109.67 43.66t-109.66-43.66Zm171.5-47.84Q500-597 500-634t-24.83-61.83q-24.84-24.84-61.84-24.84t-61.83 24.84Q326.67-671 326.67-634t24.83 61.83q24.83 24.84 61.83 24.84t61.84-24.84ZM413.33-634Zm0 407.33Z" />
+            </svg>
+        </a>
+        <a id="tracks" href="/tracks">
+            <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="#e3e3e3">
+                <path
+                    d="M641.96-160q-48.63 0-82.63-34.04-34-34.04-34-82.67 0-48.62 33.45-82.62 33.44-34 81.22-34 14.31 0 27.32 2.5T692-382v-338h188v74H758.67v370q0 48.33-34.04 82.17Q690.59-160 641.96-160ZM120-320v-66.67h310.67V-320H120Zm0-166.67v-66.66h475.33v66.66H120Zm0-166.66V-720h475.33v66.67H120Z" />
+            </svg>
+        </a>
+
+    </div>
+
+    <style>
+        body {
+            background-color: rgb(40, 36, 43);
+            width: 100vw;
+            height: 100vh;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        button {
+            background: none;
+            border: none;
+        }
+
+
+        a {
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .tracks {
+            margin-top: 25px;
+            display: flex;
+            width: 100vw;
+            align-items: flex-start;
+            border-radius: 4px;
+            flex-direction: row;
+            overflow-x: hidden;
+            flex-wrap: wrap;
+            overflow-y: scroll;
+            padding-bottom: 150px;
+            background-color: rgba(122, 122, 122, 0);
+        }
+
+
+    </style>
+    <script>
+    const context_menu = document.getElementById("context-menu");
+    function create_context_menu(x, y, t) {
+        let a = context_menu.firstElementChild.querySelectorAll("button");
+        a.forEach(element => {
+            element["m"] = t;
+        });
+        x = Math.min(x, (document.body.offsetWidth - (context_menu.offsetWidth)));
+        y = Math.min(y, (document.body.offsetHeight - (context_menu.offsetHeight)));
+        context_menu.style.top = `${y}px`;
+        context_menu.style.left = `${x}px`;
+        context_menu.style.display = "block";
+        document.addEventListener("click", () => {
+            context_menu.style.display = "none";
+        }, { once: true });
+        context_menu.addEventListener("click", (e) => {
+            e.stopPropagation();
+        })
+    }
+    fetch(`/api/tracks`).then(response => response.json()).then(data => {
+        let n = 0;
+        if (window.self != window.top) {
+            for (el of data) {
+                
+                let id = el["id"];
+                let card = createTrackCard(el, { includeInfo: true });
+                card.queue = function () {
+                    window.parent.add_queue(this.info);
+                    context_menu.style.display = "none";
+                };
+                card.play_next = function () {
+                    window.parent.add_next(this.info);
+                    context_menu.style.display = "none";
+                }
+                card.addEventListener("click", () => {
+                    window.parent.route_parent(id);
+                    window.parent.fetch_metadata(id);
+                })
+                card.addEventListener("contextmenu", (event) => {
+                    event.preventDefault();
+                    create_context_menu(event.clientX, event.clientY, event.currentTarget);
+                    window.parent.add_queue(event.currentTarget.info)
+                });
+                document.querySelector(".tracks").appendChild(card);
+                n++;
+            };
+            return;
+        }
+        for (el of data) {
+            let id = el["id"];
+            let card = createTrackCard(el, {
+                element: "a",
+                href: `/player?song=${id}&album=${el["album"]}`,
+                target: "_top"
+            });
+            document.querySelector(".tracks").appendChild(card);
+            n++;
+        };
+
+    });
+    window.parent["track_page"] = document;
+    window.parent.addEventListener("load", () => {
+        document.body.style.background = window.parent.document.body.style.background;
+    });
+    document.body.style.background = window.parent.document.body.style.background;
+
+</script>
+</body>
+
+
+</html>

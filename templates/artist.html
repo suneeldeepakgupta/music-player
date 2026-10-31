@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#171616">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Music Player">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" type="image/svg+xml" href="/icon.svg">
+    <title>Document</title>
+</head>
+
+<body>
+    <header>
+        <img src="/icon.svg" alt="lmusic" srcset="">
+        <h1>Music</h1>
+    </header>
+    <div class="artists">
+    </div>
+    <script>
+        window.addEventListener("pageshow", (event) => {
+            const navType = performance.getEntriesByType("navigation")[0]?.type;
+            if (event.persisted || navType === "back_forward") {
+                window.location.reload();
+            }
+        });
+
+        let i = `<svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 -960 960 960"  fill="#e3e3e3"><path d="M748-560h132v60h-83v235q0 47-29 76t-76 29q-47 0-76-29t-29-76q0-47 29-76t76-29q17 0 31 4t25 12v-206ZM80-160v-94q0-32 17-61.5t51-44.5q75-33 133.5-46.5T400-420q47 0 90.5 7.5T581-388q-12 11-21 22.5T544-340q-32-10-68-15t-76-5q-58 0-109 11t-119 43q-16 8-24 22.5t-8 29.5v34h390q4 19 11.5 34t18.5 26H80Zm212-363q-42-42-42-108t42-108q42-42 108-42t108 42q42 42 42 108t-42 108q-42 42-108 42t-108-42Zm172.5-43.5Q490-592 490-631t-25.5-64.5Q439-721 400-721t-64.5 25.5Q310-670 310-631t25.5 64.5Q361-541 400-541t64.5-25.5ZM400-631Zm0 411Z"/></svg>`;
+
+        fetch("/api/artists").then(response => response.json()).then(data => {
+            for (el of data) {
+                let card = document.createElement("a");
+                card.href = `/artist?artist_name=${el}`;
+                card.className = "artist";
+                let div = document.createElement("div");
+                div.innerText = el;
+                div2 = document.createElement("div");
+                div2.innerHTML = i;
+                card.appendChild(div2);
+                card.appendChild(div);
+                document.querySelector(".artists").appendChild(card);
+            };
+        });
+
+        window.parent["album_page"] = document;
+        window.parent.addEventListener("load", () => {
+            console.log("from index.html", window.parent.document.body.style.background);
+            document.body.style.background = window.parent.document.body.style.background;
+        });
+        document.body.style.background = window.parent.document.body.style.background;
+
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        button {
+            border: none;
+            background-color: transparent;
+        }
+
+        body {
+            -webkit-user-select: none;
+            user-select: none;
+        }
+       
+        header {
+            display: flex;
+            height: 50px;
+            width: 160px;
+            border-radius: 7px;
+            align-items: center;
+            gap: 5px;
+            color: rgb(53, 52, 110);
+            background-color: rgba(97, 100, 102, 0.192);
+        }
+
+        header>img {
+            height: 48px;
+        }
+
+        a {
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        a>div {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            height: 40px
+        }
+
+        a>div>*:nth-child(1) {
+            color: white;
+            font-size: 15px;
+            width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        a>div>*:nth-child(2) {
+            color: rgb(110, 106, 106);
+            font-size: 13px;
+            width: 220px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+        }
+
+
+
+        .artists {
+            height: 100%;
+            width: 100%;
+            margin-bottom: 170px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 3px;
+            overflow-x: hidden;
+            overflow-y: auto;
+            margin-top: 40px;
+            background-color: rgba(122, 122, 122, 0.164);
+        }
+
+        .artist>:nth-child(1) {
+            width: 100%;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .artist {
+            display: flex;
+            width: 120px;
+            background-color: rgba(93, 93, 94, 0.329);
+            border-radius: 5px;
+            height: 150px;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .artist>:nth-child(2) {
+            color: rgb(110, 106, 106);
+            font-size: 13px;
+            width: 100%;
+            white-space: nowrap;
+            height: 15px;
+            overflow: hidden;
+            margin-bottom: 2px;
+            text-align: center;
+            text-overflow: ellipsis;
+        }
+
+
+        * -webkit-scrollbar {
+            display: none;
+        }
+
+        * {
+            scrollbar-width: none;
+
+        }
+
+        body {
+            height: auto;
+            background-color: rgb(40, 36, 43);
+        }
+
+        .bar {
+            background-color: black;
+            width: 100%;
+            position: fixed;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-around;
+            bottom: 0;
+            height: 50px;
+        }
+
+        .bar>* {
+            background: none;
+            border: none;
+            height: 100%;
+            display: flex;
+        }
+    </style>
+    <div class="bar">
+        <a id="home" href="/">
+            <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="#e3e3e3">
+                <path
+                    d="M226.67-186.67h140v-246.66h226.66v246.66h140v-380L480-756.67l-253.33 190v380ZM160-120v-480l320-240 320 240v480H526.67v-246.67h-93.34V-120H160Zm320-352Z" />
+            </svg>
+        </a>
+        <a id="albums" href="/album">
+            <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="#e3e3e3">
+                <path
+                    d="M480-310.67q71.67 0 122.5-49.16Q653.33-409 653.33-480q0-72.33-50.5-122.83T480-653.33q-71 0-120.17 50.83-49.16 50.83-49.16 122.5 0 71 49.16 120.17Q409-310.67 480-310.67ZM451.5-451.5Q440-463 440-480t11.5-28.5Q463-520 480-520t28.5 11.5Q520-497 520-480t-11.5 28.5Q497-440 480-440t-28.5-11.5ZM480-80q-82.33 0-155.33-31.5-73-31.5-127.34-85.83Q143-251.67 111.5-324.67T80-480q0-83 31.5-156t85.83-127q54.34-54 127.34-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 82.33-31.5 155.33-31.5 73-85.5 127.34Q709-143 636-111.5T480-80Zm0-66.67q139.33 0 236.33-97.33t97-236q0-139.33-97-236.33t-236.33-97q-138.67 0-236 97-97.33 97-97.33 236.33 0 138.67 97.33 236 97.33 97.33 236 97.33ZM480-480Z" />
+            </svg>
+        </a>
+        <a id="artists" href="/artists">
+            <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="#e3e3e3">
+                <path
+                    d="M745.33-560H880v66.67h-82v230Q798-218 769-189t-74.33 29q-45.34 0-74.34-29t-29-74.33q0-45.34 29-74.34t74.34-29q14 0 26.66 3.17 12.67 3.17 24 10.17V-560Zm-652 400v-100q0-33 17.17-62t49.5-44q70.67-32.33 131-46.5 60.33-14.17 122.33-14.17 45.34 0 88.17 7.17t88.17 22.83q-14.67 11.34-26 24.67-11.34 13.33-20 29.33-30-8.66-62.5-13-32.5-4.33-67.84-4.33-57.66 0-110 12Q251-336 188-306q-13.67 7-20.83 19.67Q160-273.67 160-260v33.33h367q3.33 19.34 10.83 36Q545.33-174 557-160H93.33Zm210.34-364.33Q260-568 260-634t43.67-109.67q43.66-43.66 109.66-43.66T523-743.67Q566.67-700 566.67-634T523-524.33q-43.67 43.66-109.67 43.66t-109.66-43.66Zm171.5-47.84Q500-597 500-634t-24.83-61.83q-24.84-24.84-61.84-24.84t-61.83 24.84Q326.67-671 326.67-634t24.83 61.83q24.83 24.84 61.83 24.84t61.84-24.84ZM413.33-634Zm0 407.33Z" />
+            </svg>
+        </a>
+        <a id="tracks" href="/tracks">
+            <svg xmlns="http://www.w3.org/2000/svg" height="40px" viewBox="0 -960 960 960" width="40px" fill="#e3e3e3">
+                <path
+                    d="M641.96-160q-48.63 0-82.63-34.04-34-34.04-34-82.67 0-48.62 33.45-82.62 33.44-34 81.22-34 14.31 0 27.32 2.5T692-382v-338h188v74H758.67v370q0 48.33-34.04 82.17Q690.59-160 641.96-160ZM120-320v-66.67h310.67V-320H120Zm0-166.67v-66.66h475.33v66.66H120Zm0-166.66V-720h475.33v66.67H120Z" />
+            </svg>
+        </a>
+
+    </div>
+
+</body>
+
+</html>
